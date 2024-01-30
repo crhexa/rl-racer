@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj2uubtxnt3al"]
+
+[ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
+
+[sub_resource type="Curve2D" id="Curve2D_lajdl"]
+_data = {
+"points": PackedVector2Array(-239.46, 24.0979, 239.46, -24.0979, 805, -617, 18.6812, -80.3263, -18.6812, 80.3263, 1054, -389, 0, 0, 0, 0, 963.609, -260.102, 37.3625, -77.1133, -37.3625, 77.1133, 886, -146, -68.3331, -209.869, 68.3331, 209.869, 876, 189, -84.9147, -8.03263, 84.9147, 8.03263, 1202.98, 351.53, -25.4744, -131.735, 25.4744, 131.735, 1479, 565, 78.1216, -19.2783, -78.1216, 19.2783, 1348.48, 721.94, 0, 0, 0, 0, 882, 683, 0, 0, 0, 0, 425, 634, 25.4744, 128.522, -25.4744, -128.522, 198, 481, 33.9659, 170.292, -33.9659, -170.292, 335, 81, 61.1386, 78.7198, -61.1386, -78.7198, 116, -146, -180.019, 109.244, 180.019, -109.244, 212.599, -426.785, 0, 0, 0, 0, 805, -617)
+}
+point_count = 15
+
+[node name="Environment" type="Node"]
+
+[node name="TrackCurve" type="Path2D" parent="."]
+position = Vector2(-5845, -529)
+scale = Vector2(9.61338, 7.17084)
+curve = SubResource("Curve2D_lajdl")
+
+[node name="Car" parent="." instance=ExtResource("1_rsncd")]
+position = Vector2(842, 848)
+rotation = 0.409565
+
+[node name="Camera2D" type="Camera2D" parent="Car"]
+zoom = Vector2(0.5, 0.5)

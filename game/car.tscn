@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://crpewlxb8nhse"]
+
+[ext_resource type="Script" path="res://game/Car.cs" id="1_7dowo"]
+[ext_resource type="PackedScene" uid="uid://b05qn47qfujyy" path="res://game/wheel.tscn" id="2_0eoin"]
+[ext_resource type="Script" path="res://game/Wheels.cs" id="2_ddys7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_36xju"]
+size = Vector2(160, 400)
+
+[node name="Car" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_7dowo")
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_36xju")
+
+[node name="CarSprite" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -200.0
+offset_right = 80.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+color = Color(0.2, 0.427451, 1, 1)
+
+[node name="Wheels" type="Node2D" parent="."]
+script = ExtResource("2_ddys7")
+metadata/_edit_lock_ = true
+
+[node name="FLWheel" parent="Wheels" instance=ExtResource("2_0eoin")]
+position = Vector2(-80, -128)
+metadata/_edit_lock_ = true
+
+[node name="FRWheel" parent="Wheels" instance=ExtResource("2_0eoin")]
+position = Vector2(80, -128)
+metadata/_edit_lock_ = true
+
+[node name="BRWheel" parent="Wheels" instance=ExtResource("2_0eoin")]
+position = Vector2(80, 128)
+metadata/_edit_lock_ = true
+
+[node name="BLWheel" parent="Wheels" instance=ExtResource("2_0eoin")]
+position = Vector2(-80, 128)
+metadata/_edit_lock_ = true
