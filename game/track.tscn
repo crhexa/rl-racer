@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dj2uubtxnt3al"]
+[gd_scene load_steps=5 format=3 uid="uid://dj2uubtxnt3al"]
 
 [ext_resource type="PackedScene" uid="uid://xig33lflyfdh" path="res://game/track_curve.tscn" id="1_e1lnf"]
 [ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
@@ -9,6 +9,9 @@ _data = {
 }
 point_count = 10
 
+[sub_resource type="LabelSettings" id="LabelSettings_2s030"]
+font_size = 24
+
 [node name="Environment" type="Node"]
 
 [node name="TrackCurve" parent="." instance=ExtResource("1_e1lnf")]
@@ -18,10 +21,10 @@ curve = SubResource("Curve2D_6hn4q")
 
 [node name="Background" type="ColorRect" parent="TrackCurve"]
 show_behind_parent = true
-offset_left = -550.887
-offset_top = -1541.15
-offset_right = 29449.1
-offset_bottom = 28458.8
+offset_left = -3973.97
+offset_top = -3972.92
+offset_right = 26026.0
+offset_bottom = 26027.0
 color = Color(0.0431373, 0.6, 0.117647, 1)
 
 [node name="Car" parent="." instance=ExtResource("1_rsncd")]
@@ -29,3 +32,17 @@ position = Vector2(0, -2.98023e-08)
 
 [node name="Camera2D" type="Camera2D" parent="Car"]
 zoom = Vector2(0.5, 0.5)
+position_smoothing_enabled = true
+
+[node name="Canvas" type="CanvasLayer" parent="Car"]
+
+[node name="DebugText" type="Label" parent="Car/Canvas"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Speed:
+Lateral Velocity:
+Slip Fraction: "
+label_settings = SubResource("LabelSettings_2s030")
