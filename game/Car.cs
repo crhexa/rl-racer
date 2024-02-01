@@ -5,13 +5,13 @@ public partial class Car : CharacterBody2D
 {
 	private Wheels wheels;
 	
-	[Export] public float slipSpeed = 2000f;
+	[Export] public float slipSpeed = 1800f;
 	[Export] public float enginePower = 1000f;
 	[Export] public float brakePower = -10f;
 	[Export] public float fastTraction = 2f;
 	[Export] public float slowTraction = 6f;
 	[Export] public float friction = -20f;
-	[Export] public float drag = -0.001f;
+	[Export] public float drag = -0.0005f;
 
 	public Vector2 acceleration = Vector2.Zero;
 
@@ -46,6 +46,7 @@ public partial class Car : CharacterBody2D
 
 	private Vector2 GetFriction(float delta) {
 		// Add minimum braking friction
+		// Add tire particles on braking
 		float effectFriction = friction + (Input.IsActionPressed("Brake") ? brakePower : 0f);
 		return Velocity * delta * (effectFriction + (Velocity.Length() * drag));
 	}
@@ -61,7 +62,16 @@ public partial class Car : CharacterBody2D
 		rear += Velocity * delta;
 		
 		Vector2 heading = rear.DirectionTo(front);
-		float traction = Velocity.Length() > slipSpeed ? fastTraction : slowTraction;
+		float traction;
+
+		if (Velocity.Length() > slipSpeed) {
+			traction = fastTraction;
+			wheels.ToggleTireParticles(true);
+
+		} else {
+			traction = slowTraction;
+			wheels.ToggleTireParticles(false);
+		}
 		
 		Velocity = Velocity.Lerp(heading * Velocity.Length(), traction * delta);
 		Rotation = offset + heading.Angle();

@@ -44,6 +44,13 @@ public partial class Wheels : Node2D
 	}
 
 
+	public void ToggleTireParticles(bool emit) {
+		for (int i = 0; i < 4; i++) {
+			wheels[i].ToggleTireParticles(emit);
+		}
+	}
+
+
 	public void Steer(float steeringFraction, float delta) {
 		float desiredAngle = MathF.Min(steeringFraction, 1f) * maxWheelAngle;
 		float direction = desiredAngle >= steeringAngle ? 1f : -1f;

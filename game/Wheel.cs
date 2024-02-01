@@ -3,13 +3,14 @@ using System;
 
 public partial class Wheel : Node2D
 {
-	// Called when the node enters the scene tree for the first time.
+	private GpuParticles2D particles;
+
 	public override void _Ready()
 	{
+		particles = GetNode<GpuParticles2D>("Sprite/Particles");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+	public void ToggleTireParticles(bool emit) {
+		particles.Emitting = emit;
 	}
 }

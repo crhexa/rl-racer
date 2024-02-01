@@ -1,23 +1,31 @@
-[gd_scene load_steps=3 format=3 uid="uid://dj2uubtxnt3al"]
+[gd_scene load_steps=4 format=3 uid="uid://dj2uubtxnt3al"]
 
+[ext_resource type="PackedScene" uid="uid://xig33lflyfdh" path="res://game/track_curve.tscn" id="1_e1lnf"]
 [ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
 
-[sub_resource type="Curve2D" id="Curve2D_lajdl"]
+[sub_resource type="Curve2D" id="Curve2D_6hn4q"]
 _data = {
-"points": PackedVector2Array(-239.46, 24.0979, 239.46, -24.0979, 805, -617, 18.6812, -80.3263, -18.6812, 80.3263, 1054, -389, 0, 0, 0, 0, 963.609, -260.102, 37.3625, -77.1133, -37.3625, 77.1133, 886, -146, -68.3331, -209.869, 68.3331, 209.869, 876, 189, -84.9147, -8.03263, 84.9147, 8.03263, 1202.98, 351.53, -25.4744, -131.735, 25.4744, 131.735, 1479, 565, 78.1216, -19.2783, -78.1216, 19.2783, 1348.48, 721.94, 0, 0, 0, 0, 882, 683, 0, 0, 0, 0, 425, 634, 25.4744, 128.522, -25.4744, -128.522, 198, 481, 33.9659, 170.292, -33.9659, -170.292, 335, 81, 61.1386, 78.7198, -61.1386, -78.7198, 116, -146, -180.019, 109.244, 180.019, -109.244, 212.599, -426.785, 0, 0, 0, 0, 805, -617)
+"points": PackedVector2Array(0, 0, 0, 0, 674.176, -509.362, -332.519, 0, 332.519, 0, 1032.64, -960.497, -273.768, -145.527, 273.768, 145.527, 1301.48, 416.192, -368.307, -61.1215, 368.307, 61.1215, 2438.9, -360.924, 100.447, -270.681, -100.447, 270.681, 2472.38, 878.969, 245.428, -11.5505, -245.428, 11.5505, 2083.39, 1635.71, 279.819, 57.7526, -279.819, -57.7526, 1886.44, 586.459, 428.935, -40.4818, -428.935, 40.4818, 1145.88, 2303.68, 0, 771.575, 0, -771.575, 676.146, 934.27, 0, 0, 0, 0, 674.176, -509.362)
 }
-point_count = 15
+point_count = 10
 
 [node name="Environment" type="Node"]
 
-[node name="TrackCurve" type="Path2D" parent="."]
-position = Vector2(-5845, -529)
-scale = Vector2(9.61338, 7.17084)
-curve = SubResource("Curve2D_lajdl")
+[node name="TrackCurve" parent="." instance=ExtResource("1_e1lnf")]
+position = Vector2(-5476.78, -303.91)
+scale = Vector2(8.12366, 5.49724)
+curve = SubResource("Curve2D_6hn4q")
+
+[node name="Background" type="ColorRect" parent="TrackCurve"]
+show_behind_parent = true
+offset_left = -550.887
+offset_top = -1541.15
+offset_right = 29449.1
+offset_bottom = 28458.8
+color = Color(0.0431373, 0.6, 0.117647, 1)
 
 [node name="Car" parent="." instance=ExtResource("1_rsncd")]
-position = Vector2(842, 848)
-rotation = 0.409565
+position = Vector2(0, -2.98023e-08)
 
 [node name="Camera2D" type="Camera2D" parent="Car"]
 zoom = Vector2(0.5, 0.5)

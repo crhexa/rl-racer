@@ -7,7 +7,7 @@ particle_flag_disable_z = true
 gravity = Vector3(0, 0, 0)
 scale_min = 10.0
 scale_max = 10.0
-color = Color(0.129412, 0.129412, 0.129412, 1)
+color = Color(0.807843, 0.807843, 0.807843, 1)
 
 [node name="Wheel" type="Node2D"]
 script = ExtResource("1_6j1my")
@@ -19,8 +19,9 @@ offset_right = 20.0
 offset_bottom = 40.0
 color = Color(0.156863, 0.156863, 0.156863, 1)
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite"]
+[node name="Particles" type="GPUParticles2D" parent="Sprite"]
+show_behind_parent = true
 position = Vector2(20, 40)
-amount = 16
+amount = 48
 process_material = SubResource("ParticleProcessMaterial_rj0tr")
 lifetime = 3.0

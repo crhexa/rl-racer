@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://xig33lflyfdh"]
+
+[ext_resource type="Script" path="res://game/TrackCurve.cs" id="1_luvr8"]
+
+[node name="TrackCurve" type="Path2D"]
+z_index = -5
+script = ExtResource("1_luvr8")
