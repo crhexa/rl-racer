@@ -26,23 +26,6 @@ public partial class Wheels : Node2D
 		wheelbase = dimensions[1];
 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
-		// TEMPORARY
-
-		if (Godot.Input.IsActionPressed("Turn Left")) {
-			Steer(-1, (float) delta);
-
-		} else if (Godot.Input.IsActionPressed("Turn Right")) {
-			Steer(1, (float) delta);
-
-		} else {
-			Steer(0, (float) delta);
-		}
-
-		
-	}
-
 
 	public void ToggleTireParticles(bool emit) {
 		for (int i = 0; i < 4; i++) {
