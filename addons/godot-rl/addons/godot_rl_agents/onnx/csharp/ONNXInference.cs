@@ -25,8 +25,8 @@ namespace GodotONNX
 		{
 			modelPath = Path;
 			batchSize = BatchSize;
-            SessionOpt = SessionConfigurator.MakeConfiguredSessionOptions();
-            session = LoadModel(modelPath);
+			SessionOpt = SessionConfigurator.MakeConfiguredSessionOptions();
+			session = LoadModel(modelPath);
 
 		}
 		/// <include file='docs/ONNXInference.xml' path='docs/members[@name="ONNXInference"]/Run/*'/>

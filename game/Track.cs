@@ -46,12 +46,4 @@ public partial class Track : Node
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
-		cars[0].GetFeatures();
-		cars[0].GetReward((float) delta);
-		if (OS.HasFeature("debug")) {
-			cars[0].SetDebugText();
-		}
-	}
 }

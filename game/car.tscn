@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://crpewlxb8nhse"]
+[gd_scene load_steps=6 format=3 uid="uid://crpewlxb8nhse"]
 
 [ext_resource type="Script" path="res://game/Car.cs" id="1_7dowo"]
 [ext_resource type="PackedScene" uid="uid://b05qn47qfujyy" path="res://game/wheel.tscn" id="2_0eoin"]
 [ext_resource type="Script" path="res://game/Wheels.cs" id="2_ddys7"]
+[ext_resource type="Script" path="res://game/Controller.cs" id="4_2dty0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_36xju"]
 size = Vector2(160, 400)
@@ -77,3 +78,6 @@ target_position = Vector2(-900, 0)
 [node name="RayCast7" type="RayCast2D" parent="."]
 position = Vector2(80, -64)
 target_position = Vector2(900, 0)
+
+[node name="Controller" type="Node" parent="."]
+script = ExtResource("4_2dty0")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dj2uubtxnt3al"]
+[gd_scene load_steps=8 format=3 uid="uid://dj2uubtxnt3al"]
 
 [ext_resource type="PackedScene" uid="uid://xig33lflyfdh" path="res://game/track_curve.tscn" id="1_e1lnf"]
 [ext_resource type="Script" path="res://game/Track.cs" id="1_l5uc8"]
 [ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
+[ext_resource type="Script" path="res://addons/godot-rl/addons/godot_rl_agents/sync.gd" id="4_dk2ys"]
 
 [sub_resource type="Curve2D" id="Curve2D_2fbvr"]
 bake_interval = 30.0
@@ -21,6 +22,7 @@ outline_size = 3
 
 [node name="Environment" type="Node"]
 script = ExtResource("1_l5uc8")
+humanControl = -1
 
 [node name="TrackCurve" parent="." instance=ExtResource("1_e1lnf")]
 curve = SubResource("Curve2D_2fbvr")
@@ -59,3 +61,7 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(-54, -404)
 build_mode = 1
 polygon = PackedVector2Array(990, -1676, 1626, -3499, 4245, -4905, 5813, -3973, 5166, -63, 971, 1839)
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("4_dk2ys")
+action_repeat = 4

@@ -3,7 +3,7 @@ using System;
 
 public partial class Car : CharacterBody2D
 {
-	const int M = 17;	// Feature space dimensions
+	public const int M = 17;	// Feature space dimensions
 
 	// Node related variables
 	private Wheels wheels;
@@ -11,6 +11,7 @@ public partial class Car : CharacterBody2D
 	private TrackCurve track;
 	private RayCast2D[] rays;
 	private float[] rayLengths;
+	private Controller controller;
 	
 	// Editor variables
 	[Export] public bool hasFocus = false;
@@ -31,8 +32,8 @@ public partial class Car : CharacterBody2D
 	private bool onTrack = true;
 
 	// Agent related variables
+	public float reward = 0f;
 	private float[] features;
-	private float reward = 0f;
 	private Vector2 orthonormal;
 	private Vector2 lateralVector;
 	private float side;
@@ -45,6 +46,7 @@ public partial class Car : CharacterBody2D
 	public override void _Ready()
 	{
 		wheels = GetNode<Wheels>("Wheels");
+		controller = GetNode<Controller>("Controller");
 		debug = hasFocus ? GetNode<Label>("Canvas/DebugText") : null;
 
 		rays = new RayCast2D[7];
@@ -56,23 +58,27 @@ public partial class Car : CharacterBody2D
 
 		heading = Vector2.Up.Rotated(Rotation);
 		features = new float[M];
+		controller.init(this);
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		wheels.Steer(steeringFraction, (float) delta);
+		float dt = (float) delta;
+		wheels.Steer(steeringFraction, dt);
 
 		acceleration = GetAcceleration();
 		if (acceleration == Vector2.Zero && Velocity.Length() < 5) {
 			Velocity = Vector2.Zero;
 
 		} else {
-			acceleration += GetFriction((float) delta);
+			acceleration += GetFriction(dt);
 		}
 
-		SteerCar((float) delta);
-		Velocity += acceleration * (float) delta;
+		SteerCar(dt);
+		Velocity += acceleration * dt;
 		MoveAndSlide();
+
+		SetReward(dt);
 	}
 	
 	public void SetTrack(TrackCurve t) {
@@ -178,12 +184,8 @@ public partial class Car : CharacterBody2D
 		return features;
 	}
 
-	public float GetReward(float delta) {
-
+	private void SetReward(float delta) {
 		reward += onTrack ? Mathf.Max(features[6] * delta, 0f) : 0f;
-
-
-		return reward;
 	}
 
 	// Sets the car's next action to take
@@ -194,6 +196,6 @@ public partial class Car : CharacterBody2D
 
 	// Feature reporting
 	public void SetDebugText() {
-		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n norm_X: {features[8]:f2}\n norm_Y: {features[9]:f2}\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {reward}";
+		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n norm_X: {features[8]:f2}\n norm_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {reward}";
 	}
 }
