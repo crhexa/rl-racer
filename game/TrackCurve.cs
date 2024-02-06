@@ -3,15 +3,21 @@ using System;
 
 public partial class TrackCurve : Path2D
 {
-	[Export] public float width = 80f;
+	[Export] public bool clockwise = true;
+	[Export] public float width = 450f;
 	[Export(PropertyHint.ColorNoAlpha)] public Color innerColor = new("#0b991e");
 	[Export(PropertyHint.ColorNoAlpha)] public Color outerColor = new("#333333");
 	[Export(PropertyHint.ColorNoAlpha)] public Color borderColor = new(0, 0, 0);
-	[Export] public float borderWidth = 3f;
+	[Export] public float borderWidth = 24f;
+	[Export] public Vector2 bottomLeftBound;
+	[Export] public Vector2 topRightBound;
 
 	private Vector2[] curvePoly;
 	private Vector2[] innerPoly;
 	private Vector2[] outerPoly;
+	private Vector2[] bakedPoints;
+	private Vector2[] bakedNormals;
+	private KDTree pointTree;
 
 	
 	public override void _Ready()
@@ -30,8 +36,14 @@ public partial class TrackCurve : Path2D
 			GD.PushError("TrackCurve: unable to create polygon from path curve");
 			CallDeferred("free");
 		}
-	}
 
+		bakedPoints = Curve.GetBakedPoints();
+		bakedNormals = BakeNormals(bakedPoints, bakedPoints.Length);
+		GD.Print(bakedNormals.Length.ToString() + " normal vectors baked");
+
+		pointTree = new(bakedPoints, bakedNormals, bottomLeftBound, topRightBound);
+		GD.Print(pointTree.GetNumNodes().ToString() + " KDTree nodes created\n" + pointTree.GetTreeHeight().ToString() + " tree height");
+	}
 
 	public override void _Draw()
 	{
@@ -41,12 +53,36 @@ public partial class TrackCurve : Path2D
 		DrawPolyline(innerPoly, borderColor, borderWidth, false);
 	}
 
-
 	private static Vector2[] CreatePolygon(Vector2[] curve, float delta) {
 		Godot.Collections.Array<Vector2[]> polygons = Geometry2D.OffsetPolygon(curve, delta, Geometry2D.PolyJoinType.Round);
 		if (polygons.Count == 1) {
 			return polygons[0];
 		}
 		return null;
+	}
+
+	private static Vector2[] BakeNormals(Vector2[] points, int num) {
+		Vector2[] normals = new Vector2[num];
+
+		for (int i = 0; i < num-1; i++) {
+			normals[i] = points[i].DirectionTo(points[i+1]);
+		}
+
+		// If the last point overlaps with the first point
+		if (points[0].IsEqualApprox(points[num-1])) {
+			normals[num-1] = normals[0];
+
+		} else {
+			normals[num-1] = points[0].DirectionTo(points[num-1]);
+		}
+		return normals;
+	}
+
+	public (Vector2 point, Vector2 normal) NearestPoint(Vector2 position) {
+		return pointTree.NearestNormal(position);
+	}
+
+	public bool IsOnTrack(Vector2 position) {
+		return Geometry2D.IsPointInPolygon(position, outerPoly) && (!Geometry2D.IsPointInPolygon(position, innerPoly));
 	}
 }

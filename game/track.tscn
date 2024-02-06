@@ -1,48 +1,61 @@
-[gd_scene load_steps=5 format=3 uid="uid://dj2uubtxnt3al"]
+[gd_scene load_steps=7 format=3 uid="uid://dj2uubtxnt3al"]
 
 [ext_resource type="PackedScene" uid="uid://xig33lflyfdh" path="res://game/track_curve.tscn" id="1_e1lnf"]
+[ext_resource type="Script" path="res://game/Track.cs" id="1_l5uc8"]
 [ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
 
-[sub_resource type="Curve2D" id="Curve2D_6hn4q"]
+[sub_resource type="Curve2D" id="Curve2D_2fbvr"]
+bake_interval = 30.0
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 674.176, -509.362, -332.519, 0, 332.519, 0, 1032.64, -960.497, -273.768, -145.527, 273.768, 145.527, 1301.48, 416.192, -368.307, -61.1215, 368.307, 61.1215, 2438.9, -360.924, 100.447, -270.681, -100.447, 270.681, 2472.38, 878.969, 245.428, -11.5505, -245.428, 11.5505, 2083.39, 1635.71, 279.819, 57.7526, -279.819, -57.7526, 1886.44, 586.459, 428.935, -40.4818, -428.935, 40.4818, 1145.88, 2303.68, 0, 771.575, 0, -771.575, 676.146, 934.27, 0, 0, 0, 0, 674.176, -509.362)
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 8.4757, 2076.55, -8.4757, -2076.55, -8, -2264, -3669.78, -483.264, 3669.78, 483.264, 5407, -6001, -2825.41, -1278.16, 2825.41, 1278.16, 7347, 1762, -3078.95, -384.868, 3078.95, 384.868, 18891, -2443, 2722.59, -156.798, -2722.59, 156.798, 18357, 10992, 3178.73, 997.806, -3178.73, -997.806, 14827, 4490, 3135.96, -57.0175, -3135.96, 57.0175, 6700, 14396, -14.2544, 2451.75, 14.2544, -2451.75, -6, 8529, 0, 0, 0, 0, 0, 0)
 }
 point_count = 10
 
+[sub_resource type="SystemFont" id="SystemFont_6int3"]
+font_names = PackedStringArray("Monospace")
+
 [sub_resource type="LabelSettings" id="LabelSettings_2s030"]
+font = SubResource("SystemFont_6int3")
 font_size = 24
+outline_size = 3
 
 [node name="Environment" type="Node"]
+script = ExtResource("1_l5uc8")
 
 [node name="TrackCurve" parent="." instance=ExtResource("1_e1lnf")]
-position = Vector2(-5476.78, -303.91)
-scale = Vector2(8.12366, 5.49724)
-curve = SubResource("Curve2D_6hn4q")
+curve = SubResource("Curve2D_2fbvr")
+bottomLeftBound = Vector2(-10000, -10000)
+topRightBound = Vector2(30000, 30000)
 
 [node name="Background" type="ColorRect" parent="TrackCurve"]
 show_behind_parent = true
-offset_left = -3973.97
-offset_top = -3972.92
-offset_right = 26026.0
-offset_bottom = 26027.0
+offset_left = -10000.0
+offset_top = -10000.0
+offset_right = 40000.0
+offset_bottom = 40000.0
 color = Color(0.0431373, 0.6, 0.117647, 1)
 
-[node name="Car" parent="." instance=ExtResource("1_rsncd")]
+[node name="Car_0" parent="." instance=ExtResource("1_rsncd")]
 position = Vector2(0, -2.98023e-08)
+hasFocus = true
 
-[node name="Camera2D" type="Camera2D" parent="Car"]
+[node name="Camera2D" type="Camera2D" parent="Car_0"]
 zoom = Vector2(0.5, 0.5)
-position_smoothing_enabled = true
 
-[node name="Canvas" type="CanvasLayer" parent="Car"]
+[node name="Canvas" type="CanvasLayer" parent="Car_0"]
 
-[node name="DebugText" type="Label" parent="Car/Canvas"]
+[node name="DebugText" type="Label" parent="Car_0/Canvas"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Speed:
-Lateral Velocity:
-Slip Fraction: "
 label_settings = SubResource("LabelSettings_2s030")
+metadata/_edit_use_anchors_ = true
+
+[node name="Rock" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Rock"]
+position = Vector2(-54, -404)
+build_mode = 1
+polygon = PackedVector2Array(990, -1676, 1626, -3499, 4245, -4905, 5813, -3973, 5166, -63, 971, 1839)

@@ -49,3 +49,31 @@ metadata/_edit_lock_ = true
 [node name="BLWheel" parent="Wheels" instance=ExtResource("2_0eoin")]
 position = Vector2(-80, 128)
 metadata/_edit_lock_ = true
+
+[node name="RayCast1" type="RayCast2D" parent="."]
+position = Vector2(0, -200)
+target_position = Vector2(0, -1020)
+
+[node name="RayCast2" type="RayCast2D" parent="."]
+position = Vector2(-48, -200)
+target_position = Vector2(-320, -1020)
+
+[node name="RayCast3" type="RayCast2D" parent="."]
+position = Vector2(48, -200)
+target_position = Vector2(320, -1020)
+
+[node name="RayCast4" type="RayCast2D" parent="."]
+position = Vector2(-80, -128)
+target_position = Vector2(-800, -800)
+
+[node name="RayCast5" type="RayCast2D" parent="."]
+position = Vector2(80, -128)
+target_position = Vector2(800, -800)
+
+[node name="RayCast6" type="RayCast2D" parent="."]
+position = Vector2(-80, -64)
+target_position = Vector2(-900, 0)
+
+[node name="RayCast7" type="RayCast2D" parent="."]
+position = Vector2(80, -64)
+target_position = Vector2(900, 0)
