@@ -11,14 +11,25 @@ public partial class Controller : Node
 	private Godot.Collections.Dictionary observation;
 	private Godot.Collections.Array obs;
 
-	public string heuristic = "human";
-	public bool done = false;
-	public int n_steps = 0;
-	public bool needs_reset = false;
+	[Export] public string heuristic = "human";
+	[Export] public bool done = false;
+
+	[Export] public bool needs_reset = false;
+	[Export] public int reset_after = 8000;
+	[Export] public int n_steps = 0;
 
 	public override void _Ready()
 	{
 		AddToGroup("AGENT");
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		n_steps += 1;
+		if (n_steps > reset_after) {
+			needs_reset = true;
+			done = true;
+		}
 	}
 
 	public void init(Car car) {
@@ -85,6 +96,7 @@ public partial class Controller : Node
 
 	public void set_done_false() {
 		done = false;
+		reset();
 	}
 
 	public void zero_reward() {
@@ -92,7 +104,9 @@ public partial class Controller : Node
 	}
 
 	public void reset() {
-		return;
+		n_steps = 0;
+		agent.ResetCar();
+		needs_reset = false;
 	}
 
 	public void reset_if_done() {

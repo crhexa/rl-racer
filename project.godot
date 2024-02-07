@@ -17,7 +17,7 @@ config/icon="res://assets/icon.svg"
 
 [debug]
 
-settings/stdout/print_fps=true
+gdscript/warnings/unsafe_property_access=1
 
 [display]
 

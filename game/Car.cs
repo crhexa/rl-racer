@@ -14,6 +14,7 @@ public partial class Car : CharacterBody2D
 	private Controller controller;
 	
 	// Editor variables
+	[Export] public Vector2 startingPosition = Vector2.Zero;
 	[Export] public bool hasFocus = false;
 	[Export] public float slipSpeed = 175f;
 	[Export] public float enginePower = 1000f;
@@ -33,6 +34,7 @@ public partial class Car : CharacterBody2D
 
 	// Agent related variables
 	public float reward = 0f;
+	public float totalReward = 0f;
 	private float[] features;
 	private Vector2 orthonormal;
 	private Vector2 lateralVector;
@@ -63,6 +65,11 @@ public partial class Car : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (CarNeedsReset()) {
+			controller.needs_reset = true;
+			controller.done = true;
+		}
+
 		float dt = (float) delta;
 		wheels.Steer(steeringFraction, dt);
 
@@ -78,7 +85,9 @@ public partial class Car : CharacterBody2D
 		Velocity += acceleration * dt;
 		MoveAndSlide();
 
+		CalculateFeatures();
 		SetReward(dt);
+		if (hasFocus) SetDebugText();
 	}
 	
 	public void SetTrack(TrackCurve t) {
@@ -143,11 +152,30 @@ public partial class Car : CharacterBody2D
 		return 1 - slip;
 	}
 
+	public void ResetCar() {
+		Position = startingPosition;
+		Velocity = Vector2.Zero;
+		Rotation = 0f;
+		acceleration = Vector2.Zero;
+		steeringFraction = 0f;
+		accelerationFraction = 0f;
+		reward = 0f;
+		totalReward = 0f;
+		lateral = 0f;
+		slip = 0f;
+
+		isSlipping = false;
+		onTrack = true;
+	}
+
+	private bool CarNeedsReset() {
+		return MathF.Abs(lateralOffset) > maxDistanceFromTrack;
+	}
 
 	/*************************************
 	*	Logic for features and rewards
 	**************************************/
-	public float[] GetFeatures() {
+	private void CalculateFeatures() {
 		(Vector2 point, Vector2 normal) = track.NearestPoint(Position);
 
 		orthonormal = normal.Rotated(0.5f * Mathf.Pi);				// Vector orthogonal to the normal vector
@@ -181,11 +209,16 @@ public partial class Car : CharacterBody2D
 				? rays[i].GetCollisionPoint().DistanceTo(rays[i].GlobalTransform.Origin) / rayLengths[i] 
 				: 1f;
 		}
+	}
+
+	public float[] GetFeatures() {
 		return features;
 	}
 
 	private void SetReward(float delta) {
-		reward += onTrack ? Mathf.Max(features[6] * delta, 0f) : 0f;
+		float r = onTrack ? Mathf.Max(features[6] * delta, 0f) : 0f;
+		reward += r;
+		totalReward += r;
 	}
 
 	// Sets the car's next action to take
@@ -196,6 +229,6 @@ public partial class Car : CharacterBody2D
 
 	// Feature reporting
 	public void SetDebugText() {
-		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n norm_X: {features[8]:f2}\n norm_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {reward}";
+		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n norm_X: {features[8]:f2}\n norm_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {totalReward}";
 	}
 }
