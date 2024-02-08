@@ -1,24 +1,31 @@
 using Godot;
 using System;
+using System.Threading;
 
 public partial class Track : Node
 {
 	[Export] public int humanControl = 0;
+	[Export] public int numberCars = 1;
 
 	private PackedScene carScene;
 	private Car[] cars = new Car[1];
 	private TrackCurve track;
+	private Node sync;
 
 	public override void _Ready()
 	{
 		carScene = GD.Load<PackedScene>("res://game/car.tscn");
 
-
+		sync = GetNode<Node>("Sync");
 		track = GetNode<TrackCurve>("TrackCurve");
 		cars[0] = GetNode<Car>("Car_0");
 
 		foreach (Car car in cars) {
 			car.SetTrack(track);
+		}
+
+		if (humanControl > -1 && numberCars < 2) {
+			sync.Set("disabled", true);
 		}
 	}
 

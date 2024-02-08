@@ -15,14 +15,14 @@ public partial class KDTree
 	public class KDNode
 	{
 		public Vector2 vector;
-		public Vector2 normal;
+		public (Vector2 normal, Vector2 direct) normals;
 
 		public KDNode left;
 		public KDNode right;
 
-		public KDNode(Vector2 v, Vector2 n) {
+		public KDNode(Vector2 v, (Vector2 n, Vector2 d) normals) {
 			vector = v;
-			normal = n;
+			this.normals = normals;
 
 			left = null;
 			right = null;
@@ -76,21 +76,21 @@ public partial class KDTree
 		}
 	}
 
-	private void SortByX(Vector2[] vectors, Vector2[] normals) {
+	private void SortByX(Vector2[] vectors, (Vector2 n, Vector2 d) [] normals) {
 		Array.Sort(vectors, normals, cmpx);
 	}
 
-	private void SortByY(Vector2[] vectors, Vector2[] normals) {
+	private void SortByY(Vector2[] vectors, (Vector2 n, Vector2 d) [] normals) {
 		Array.Sort(vectors, normals, cmpy);
 	}
 
 	// Constructor
-	public KDTree(Vector2[] vectors, Vector2[] normals, Vector2 low, Vector2 high) {
+	public KDTree(Vector2[] vectors, (Vector2 normal, Vector2 direct)[] normals, Vector2 low, Vector2 high) {
 		bounds = new Rect(low, high);
 		root = BuildTree(vectors, normals, 0);
 	}
 
-	private KDNode BuildTree(Vector2[] vectors, Vector2[] normals, int depth) {
+	private KDNode BuildTree(Vector2[] vectors, (Vector2 normal, Vector2 direct)[] normals, int depth) {
 		if (vectors.Length == 0) {
 			return null;
 		}
@@ -117,13 +117,13 @@ public partial class KDTree
 	}
 
 	// Called by car code
-	public (Vector2 point, Vector2 normal) NearestNormal(Vector2 vector) {
+	public (Vector2 point, Vector2 normal, Vector2 direct) NearestNormal(Vector2 vector) {
 		KDNode nearest = NearestNode(root, vector, bounds, null, Mathf.Inf, 0).Item1;
 		if (nearest == null) {
 			GD.PrintErr("KDTree: failed to find nearest node");
-			return (Vector2.Inf, Vector2.Inf);
+			return (Vector2.Inf, Vector2.Inf, Vector2.Inf);
 		}
-		return (nearest.vector, nearest.normal);
+		return (nearest.vector, nearest.normals.normal, nearest.normals.direct);
 	}
 
 

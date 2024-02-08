@@ -176,7 +176,7 @@ public partial class Car : CharacterBody2D
 	*	Logic for features and rewards
 	**************************************/
 	private void CalculateFeatures() {
-		(Vector2 point, Vector2 normal) = track.NearestPoint(Position);
+		(Vector2 point, Vector2 normal, Vector2 direct) = track.NearestPoint(Position);
 
 		orthonormal = normal.Rotated(0.5f * Mathf.Pi);				// Vector orthogonal to the normal vector
 		lateralVector = (Position-point).Project(orthonormal);		// Relative position in the direction of the orthonormal
@@ -199,9 +199,9 @@ public partial class Car : CharacterBody2D
 		features[6] = Velocity.Project(normal).Length() * direction / 2800f; 			
 		features[7] = Mathf.Min(lateralOffset / maxDistanceFromTrack, 1f); 
 
-		// Track normal
-		features[8] = normal.X; 
-		features[9] = normal.Y;
+		// Direction normal
+		features[8] = direct.X; 
+		features[9] = direct.Y;
 
 		for (int i = 0; i < 7; i++) {
 			bool colliding = rays[i].IsColliding();
@@ -229,6 +229,6 @@ public partial class Car : CharacterBody2D
 
 	// Feature reporting
 	public void SetDebugText() {
-		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n norm_X: {features[8]:f2}\n norm_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {totalReward}";
+		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n dirc_X: {features[8]:f2}\n dirc_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {totalReward}";
 	}
 }

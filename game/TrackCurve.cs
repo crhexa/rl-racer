@@ -11,12 +11,13 @@ public partial class TrackCurve : Path2D
 	[Export] public float borderWidth = 24f;
 	[Export] public Vector2 bottomLeftBound;
 	[Export] public Vector2 topRightBound;
+	[Export] public static int trackVision = 100;
 
 	private Vector2[] curvePoly;
 	private Vector2[] innerPoly;
 	private Vector2[] outerPoly;
 	private Vector2[] bakedPoints;
-	private Vector2[] bakedNormals;
+	private (Vector2 normal, Vector2 direct)[] bakedNormals;
 	private KDTree pointTree;
 
 	
@@ -61,11 +62,14 @@ public partial class TrackCurve : Path2D
 		return null;
 	}
 
-	private static Vector2[] BakeNormals(Vector2[] points, int num) {
-		Vector2[] normals = new Vector2[num];
+	private static (Vector2 normal, Vector2 direct)[] BakeNormals(Vector2[] points, int num) {
+		(Vector2 normal, Vector2 direct)[] normals = new (Vector2 normal, Vector2 direct)[num];
 
 		for (int i = 0; i < num-1; i++) {
-			normals[i] = points[i].DirectionTo(points[i+1]);
+			normals[i] = (
+				points[i].DirectionTo(points[i+1]),
+				points[i].DirectionTo(points[(i+trackVision) % num])
+			);
 		}
 
 		// If the last point overlaps with the first point
@@ -73,12 +77,15 @@ public partial class TrackCurve : Path2D
 			normals[num-1] = normals[0];
 
 		} else {
-			normals[num-1] = points[0].DirectionTo(points[num-1]);
+			normals[num-1] = (
+				points[num-1].DirectionTo(points[0]),
+				points[num-1].DirectionTo(points[trackVision-1])
+			);
 		}
 		return normals;
 	}
 
-	public (Vector2 point, Vector2 normal) NearestPoint(Vector2 position) {
+	public (Vector2 point, Vector2 normal, Vector2 direct) NearestPoint(Vector2 position) {
 		return pointTree.NearestNormal(position);
 	}
 

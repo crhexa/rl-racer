@@ -29,9 +29,14 @@ var n_action_steps = 0
 var _action_space : Dictionary
 var _obs_space : Dictionary
 
+var disabled = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	await get_tree().root.ready
+	if disabled:
+		return
+	
 	get_tree().set_pause(true) 
 	_initialize()
 	await get_tree().create_timer(1.0).timeout
@@ -67,6 +72,9 @@ func _initialize():
 	initialized = true  
 
 func _physics_process(_delta): 
+	if disabled:
+		return
+	
 	# two modes, human control, agent control
 	# pause tree, send obs, get actions, set actions, unpause tree
 	if n_action_steps % action_repeat != 0:
