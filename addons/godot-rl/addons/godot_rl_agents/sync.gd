@@ -203,8 +203,8 @@ func _send_env_info():
 	_send_dict_as_json_message(message)
 
 func connect_to_server():
-	print("Waiting for 200 ms to allow server to start")
-	OS.delay_msec(200)
+	print("Waiting for 100 ms to allow server to start")
+	OS.delay_msec(100)
 	print("trying to connect to server")
 	stream = StreamPeerTCP.new()
 	

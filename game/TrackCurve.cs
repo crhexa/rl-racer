@@ -11,7 +11,6 @@ public partial class TrackCurve : Path2D
 	[Export] public float borderWidth = 24f;
 	[Export] public Vector2 bottomLeftBound;
 	[Export] public Vector2 topRightBound;
-	[Export] public static int trackVision = 100;
 
 	private Vector2[] curvePoly;
 	private Vector2[] innerPoly;
@@ -19,6 +18,7 @@ public partial class TrackCurve : Path2D
 	private Vector2[] bakedPoints;
 	private (Vector2 normal, Vector2 direct)[] bakedNormals;
 	private KDTree pointTree;
+	private const int trackVision = 70;
 
 	
 	public override void _Ready()

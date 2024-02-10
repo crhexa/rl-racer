@@ -16,13 +16,13 @@ public partial class Car : CharacterBody2D
 	// Editor variables
 	[Export] public Vector2 startingPosition = Vector2.Zero;
 	[Export] public bool hasFocus = false;
-	[Export] public float slipSpeed = 175f;
+	[Export] public float slipSpeed = 180f;
 	[Export] public float enginePower = 1000f;
 	[Export] public float brakePower = -10f;
 	[Export] public float upFriction = -20f;
 	[Export] public float sideFriction = -25f;
 	[Export] public float drag = -0.0005f;
-	[Export] public float maxDistanceFromTrack = 2000f;
+	[Export] public float maxDistanceFromTrack = 1600f;
 
 	// State variables
 	private Vector2 acceleration = Vector2.Zero;
@@ -31,6 +31,10 @@ public partial class Car : CharacterBody2D
 	private float slip = 0f;
 	private bool isSlipping = false;
 	private bool onTrack = true;
+	private bool hasReset = false;
+	private Vector2 point = Vector2.Zero;
+	private Vector2 normal = Vector2.Up;
+	private Vector2 direct;
 
 	// Agent related variables
 	public float reward = 0f;
@@ -115,7 +119,7 @@ public partial class Car : CharacterBody2D
 
 		onTrack = track.IsOnTrack(Position);
 		if (!onTrack) {
-			effectFriction *= 1.5f;
+			effectFriction *= 2f;
 		}
 		
 		return Velocity * delta * (effectFriction + (Velocity.Length() * drag));
@@ -154,8 +158,19 @@ public partial class Car : CharacterBody2D
 
 	public void ResetCar() {
 		Position = startingPosition;
-		Velocity = Vector2.Zero;
 		Rotation = 0f;
+		/*
+		if (hasReset) {
+			Position = point;
+			Rotation = Vector2.Up.AngleTo(normal);
+
+		} else {
+			Position = startingPosition;
+			Rotation = 0f;
+			hasReset = true;
+		}*/
+
+		Velocity = Vector2.Zero;
 		acceleration = Vector2.Zero;
 		steeringFraction = 0f;
 		accelerationFraction = 0f;
@@ -169,14 +184,14 @@ public partial class Car : CharacterBody2D
 	}
 
 	private bool CarNeedsReset() {
-		return MathF.Abs(lateralOffset) > maxDistanceFromTrack;
+		return MathF.Abs(normal.AngleTo(heading)) > (MathF.PI*0.85) || MathF.Abs(lateralOffset) > maxDistanceFromTrack;
 	}
 
 	/*************************************
 	*	Logic for features and rewards
 	**************************************/
 	private void CalculateFeatures() {
-		(Vector2 point, Vector2 normal, Vector2 direct) = track.NearestPoint(Position);
+		(point, normal, direct) = track.NearestPoint(Position);
 
 		orthonormal = normal.Rotated(0.5f * Mathf.Pi);				// Vector orthogonal to the normal vector
 		lateralVector = (Position-point).Project(orthonormal);		// Relative position in the direction of the orthonormal
@@ -216,7 +231,7 @@ public partial class Car : CharacterBody2D
 	}
 
 	private void SetReward(float delta) {
-		float r = onTrack ? Mathf.Max(features[6] * delta, 0f) : 0f;
+		float r = onTrack ? Mathf.Max(features[6] * delta, 0f) : -0.05f * delta;
 		reward += r;
 		totalReward += r;
 	}

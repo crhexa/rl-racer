@@ -22,6 +22,7 @@ outline_size = 3
 
 [node name="Environment" type="Node"]
 script = ExtResource("1_l5uc8")
+humanControl = -1
 
 [node name="TrackCurve" parent="." instance=ExtResource("1_e1lnf")]
 curve = SubResource("Curve2D_2fbvr")
@@ -59,7 +60,14 @@ metadata/_edit_use_anchors_ = true
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Rock"]
 position = Vector2(-54, -404)
 build_mode = 1
-polygon = PackedVector2Array(990, -1676, 1626, -3499, 4245, -4905, 5813, -3973, 5166, -63, 971, 1839)
+polygon = PackedVector2Array(990, -1676, 1626, -3499, 4245, -4905, 5813, -3973, 5165, 1583, 1368, 1549)
+disabled = true
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Rock"]
+position = Vector2(14425, 5190)
+build_mode = 1
+polygon = PackedVector2Array(2971, 921, 4231, 316, 5360, 1173, 5386, 2328, 5002, 3712, 4466, 4720, 3858, 5216, 3234, 4896, 3010, 4032, 2818, 1408)
+disabled = true
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_dk2ys")

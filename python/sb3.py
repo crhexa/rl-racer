@@ -71,7 +71,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--timesteps",
-    default=1_000_000,
+    default=10_000_000,
     type=int,
     help="The number of environment steps to train for, default is 1_000_000. If resuming from a saved model, "
     "it will continue training for this amount of steps from the saved state without counting previously trained "
@@ -181,16 +181,17 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
 
 
 if args.resume_model_path is None:
-    learning_rate = 0.001 if not args.linear_lr_schedule else linear_schedule(0.001)
+    learning_rate = 0.0001 if not args.linear_lr_schedule else linear_schedule(0.0001)
     model: PPO = PPO(
         "MultiInputPolicy",
         env,
-        ent_coef=0.0001,
+        ent_coef=0.001,
         verbose=2,
-        n_steps=64,
+        n_steps=256,
         tensorboard_log=args.experiment_dir,
         learning_rate=learning_rate,
-        device="cpu"
+        device="cpu",
+        
     )
 else:
     path_zip = pathlib.Path(args.resume_model_path)
