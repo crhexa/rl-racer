@@ -7,6 +7,8 @@ A custom environment made using the [Godot Engine](https://github.com/godotengin
 ### Model 1
 
 
+https://github.com/crhexa/rl-racer/assets/56240785/85e6021e-c956-466e-8bcd-cc6dcbf13bb3
+
 
 ## Installation
 
@@ -15,5 +17,5 @@ Work In Progress
 ## Roadmap
 
 - Multi-agent training
-- Human vs. Agent(s) interaction
+- Human controlled vs. Agent(s) controlled
 
