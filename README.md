@@ -9,13 +9,26 @@ A custom environment made using the [Godot Engine](https://github.com/godotengin
 
 https://github.com/crhexa/rl-racer/assets/56240785/85e6021e-c956-466e-8bcd-cc6dcbf13bb3
 
+## Demo - Environment v0.2
+### Model 2
+
+
+
 
 ## Installation
 
 Work In Progress
-    
-## Roadmap
 
+
+## Changelog
+### Environment v0.2:
+- Added an angle limit to reach fail state
+- Added a small penalty for  driving off-track
+- Increased off-track friction
+- Slightly increased slip speed threshold
+
+## Roadmap
+- Time-tracking and checkpoints
 - Multi-agent training
 - Human controlled vs. Agent(s) controlled
 
