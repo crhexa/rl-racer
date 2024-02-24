@@ -27,6 +27,13 @@ public partial class Wheels : Node2D
 	}
 
 
+	public void ResetWheels() {
+		steeringAngle = 0f;
+		wheels[0].Rotation = 0f;
+		wheels[1].Rotation = 0f;
+	}
+
+
 	public void ToggleTireParticles(bool emit) {
 		for (int i = 0; i < 4; i++) {
 			wheels[i].ToggleTireParticles(emit);

@@ -3,6 +3,8 @@
 
 logs/*
 !logs/.gdignore
-*.exe
 models/*
 !models/.gdignore
+
+*.exe
+*.ps1

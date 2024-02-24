@@ -6,12 +6,14 @@ public partial class Car : CharacterBody2D
 	public const int M = 17;	// Feature space dimensions
 
 	// Node related variables
+	public int carID;
 	private Wheels wheels;
 	private Label debug;
+	private Track env;
 	private TrackCurve track;
 	private RayCast2D[] rays;
 	private float[] rayLengths;
-	private Controller controller;
+	public Controller controller;
 	
 	// Editor variables
 	[Export] public Vector2 startingPosition = Vector2.Zero;
@@ -31,12 +33,12 @@ public partial class Car : CharacterBody2D
 	private float slip = 0f;
 	private bool isSlipping = false;
 	private bool onTrack = true;
-	private bool hasReset = false;
 	private Vector2 point = Vector2.Zero;
 	private Vector2 normal = Vector2.Up;
 	private Vector2 direct;
 
 	// Agent related variables
+	public bool needsRestart = false;
 	public float reward = 0f;
 	public float totalReward = 0f;
 	private float[] features;
@@ -44,7 +46,7 @@ public partial class Car : CharacterBody2D
 	private Vector2 lateralVector;
 	private float side;
 	private float direction;
-	private float lateralOffset;
+	private float lateralOffset = 0f;
 	private float steeringFraction = 0f;
 	private float accelerationFraction = 0f;
 
@@ -69,33 +71,38 @@ public partial class Car : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (CarNeedsReset()) {
-			controller.needs_reset = true;
-			controller.done = true;
-		}
-
 		float dt = (float) delta;
 		wheels.Steer(steeringFraction, dt);
 
+		// If the car isn't accelerating and the velocity is below a certain threshold, then stop the car
 		acceleration = GetAcceleration();
 		if (acceleration == Vector2.Zero && Velocity.Length() < 5) {
 			Velocity = Vector2.Zero;
 
+		// Otherwise apply friction
 		} else {
 			acceleration += GetFriction(dt);
 		}
 
+		// Apply steering, acceleration, velocity, and collisions
 		SteerCar(dt);
 		Velocity += acceleration * dt;
-		MoveAndSlide();
+		CheckCollisions(MoveAndCollide(Velocity * dt));
 
+		// Recalculate features/rewards and update the debug display
 		CalculateFeatures();
 		SetReward(dt);
 		if (hasFocus) SetDebugText();
+
+		if (CarNeedsReset()) {
+			env.FreezeCar(carID);
+			return;
+		}
 	}
 	
-	public void SetTrack(TrackCurve t) {
+	public void SetTrack(TrackCurve t, Track e) {
 		track = t;
+		env = e;
 	}
 
 	/****************************
@@ -179,12 +186,34 @@ public partial class Car : CharacterBody2D
 		lateral = 0f;
 		slip = 0f;
 
+		needsRestart = false;
 		isSlipping = false;
 		onTrack = true;
+
+		wheels.ResetWheels();
+		env.FinishedRestarting(carID);
+		ProcessMode = ProcessModeEnum.Inherit;
 	}
 
 	private bool CarNeedsReset() {
-		return MathF.Abs(normal.AngleTo(heading)) > (MathF.PI*0.85) || MathF.Abs(lateralOffset) > maxDistanceFromTrack;
+		return needsRestart
+			|| MathF.Abs(normal.AngleTo(heading)) > (MathF.PI*0.85) 
+			|| MathF.Abs(lateralOffset) > maxDistanceFromTrack;
+	}
+
+	private void CheckCollisions(KinematicCollision2D collision) {
+		if (collision == null || needsRestart) return;
+
+		Car other = (Car) collision.GetCollider();
+
+		if (other.Velocity.LengthSquared() > Velocity.LengthSquared()) {
+			other.reward -= (other.Velocity-Velocity).Length() / 1500f;
+
+		} else {
+			reward -= (Velocity-other.Velocity).Length() / 1500f;
+		}
+		env.FreezeCar(carID);
+		env.FreezeCar(other.carID);
 	}
 
 	/*************************************

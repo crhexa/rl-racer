@@ -71,7 +71,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--timesteps",
-    default=10_000_000,
+    default=30_000_000,
     type=int,
     help="The number of environment steps to train for, default is 1_000_000. If resuming from a saved model, "
     "it will continue training for this amount of steps from the saved state without counting previously trained "
