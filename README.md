@@ -18,20 +18,35 @@ https://github.com/crhexa/rl-racer/assets/56240785/c8e3b368-0f54-4dbf-bb4f-2ab33
 
 [Full Demo Video](https://youtu.be/TICGJOJwRHg)
 
+
+## Demo - Environment v0.3
+### Model 3
+
+
+
+https://github.com/crhexa/rl-racer/assets/56240785/d42c547b-51e6-4a73-bfd1-3ce8472242d3
+
+[Full Demo Video](https://www.youtu.be/zaZSQkXxg2c)
+
+
 ## Installation
 
 Work In Progress
 
 
 ## Changelog
+### Environment v0.3:
+- Added training of multiple agents
+- Added multi-target camera tracking
+
 ### Environment v0.2:
 - Added an angle limit to reach fail state
-- Added a small penalty for  driving off-track
+- Added a small penalty for driving off-track
 - Increased off-track friction
 - Slightly increased slip speed threshold
 
 ## Roadmap
 - Time-tracking and checkpoints
-- Multi-agent training
 - Human controlled vs. Agent(s) controlled
+- Improved collision avoidance
 
