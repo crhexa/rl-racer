@@ -30,6 +30,7 @@ public partial class Controller : Node
 		n_steps += 1;
 		if (n_steps > reset_after) {
 			needs_reset = true;
+			done = true;
 		}
 	}
 

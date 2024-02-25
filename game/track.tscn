@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dj2uubtxnt3al"]
+[gd_scene load_steps=9 format=3 uid="uid://dj2uubtxnt3al"]
 
 [ext_resource type="PackedScene" uid="uid://xig33lflyfdh" path="res://game/track_curve.tscn" id="1_e1lnf"]
 [ext_resource type="Script" path="res://game/Track.cs" id="1_l5uc8"]
 [ext_resource type="PackedScene" uid="uid://crpewlxb8nhse" path="res://game/car.tscn" id="1_rsncd"]
 [ext_resource type="Script" path="res://addons/godot-rl/addons/godot_rl_agents/sync.gd" id="4_dk2ys"]
+[ext_resource type="PackedScene" uid="uid://s62qeesg7nxf" path="res://game/multi_camera2d.tscn" id="5_5rav5"]
 
 [sub_resource type="Curve2D" id="Curve2D_2fbvr"]
 bake_interval = 30.0
@@ -32,8 +33,8 @@ topRightBound = Vector2(30000, 30000)
 
 [node name="Background" type="ColorRect" parent="TrackCurve"]
 show_behind_parent = true
-offset_left = -10000.0
-offset_top = -10000.0
+offset_left = -20000.0
+offset_top = -20000.0
 offset_right = 40000.0
 offset_bottom = 40000.0
 color = Color(0.0431373, 0.6, 0.117647, 1)
@@ -43,7 +44,7 @@ position = Vector2(-200, 0)
 hasFocus = true
 
 [node name="Camera2D" type="Camera2D" parent="Car_0"]
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(0.1, 0.1)
 
 [node name="Canvas" type="CanvasLayer" parent="Car_0"]
 
@@ -59,3 +60,5 @@ metadata/_edit_use_anchors_ = true
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_dk2ys")
 action_repeat = 4
+
+[node name="MultiCam2D" parent="." instance=ExtResource("5_5rav5")]

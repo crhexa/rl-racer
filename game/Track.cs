@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Linq;
 
 public partial class Track : Node
@@ -10,11 +9,13 @@ public partial class Track : Node
 	[Export] public Vector2 startOffset = new Vector2(400f, 560f);
 	[Export] public Vector2 freezeOffset = new Vector2(-20000f, -20000f);
 
+	private PackedScene camScene;
 	private PackedScene carScene;
 	private Car[] cars;
-	private bool[] carState;
 	private TrackCurve track;
 	private Node sync;
+	private MultiCamera2D camera;
+	public bool[] carState;
 
 	public override void _Ready()
 	{
@@ -23,6 +24,7 @@ public partial class Track : Node
 		carScene = GD.Load<PackedScene>("res://game/car.tscn");
 
 		sync = GetNode<Node>("Sync");
+		camera = GetNode<MultiCamera2D>("MultiCam2D");
 		track = GetNode<TrackCurve>("TrackCurve");
 		cars[0] = GetNode<Car>("Car_0");
 
@@ -32,6 +34,7 @@ public partial class Track : Node
 		for (int i = 0; i < numberCars; i++) {
 			if (i > 0) {
 				cars[i] = carScene.Instantiate<Car>();
+				cars[i].Name = $"Car_{i}";
 				PlaceCar(cars[i], start, i);
 				AddChild(cars[i]);
 			}
@@ -41,8 +44,19 @@ public partial class Track : Node
 		}
 
 		MoveChild(sync, -1);
+		MoveChild(camera, -1);
 		if (!agentControl || (humanControl > -1 && numberCars < 2)) {
 			sync.Set("disabled", true);
+		}
+
+		if (OS.HasFeature("release") || humanControl < 0) {
+			camera.SetCars(cars, this);
+			GetNode<Camera2D>("Car_0/Camera2D").Enabled = false;
+			GetNode<CanvasLayer>("Car_0/Canvas").Visible = false;
+
+		} else {
+			camera.Enabled = false;
+			camera.ProcessMode = ProcessModeEnum.Disabled;
 		}
 	}
 

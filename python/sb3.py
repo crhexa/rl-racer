@@ -185,13 +185,12 @@ if args.resume_model_path is None:
     model: PPO = PPO(
         "MultiInputPolicy",
         env,
-        ent_coef=0.001,
+        ent_coef=0.01,
         verbose=2,
-        n_steps=256,
+        n_steps=512,
         tensorboard_log=args.experiment_dir,
         learning_rate=learning_rate,
-        device="cpu",
-        
+        device="cpu"
     )
 else:
     path_zip = pathlib.Path(args.resume_model_path)
