@@ -26,7 +26,7 @@ https://github.com/crhexa/rl-racer/assets/56240785/c8e3b368-0f54-4dbf-bb4f-2ab33
 
 https://github.com/crhexa/rl-racer/assets/56240785/d42c547b-51e6-4a73-bfd1-3ce8472242d3
 
-[Full Demo Video](https://www.youtu.be/zaZSQkXxg2c)
+[Full Demo Video](https://youtu.be/zaZSQkXxg2c)
 
 
 ## Installation
