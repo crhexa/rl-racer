@@ -1,6 +1,6 @@
 # RL-Racer
 
-A custom environment made using the [Godot Engine](https://github.com/godotengine/godot) and written in C# used to train reinforcement learning models to drive a car on a top-down virtual track with semi-realistic physics. Utilizes the [Godot RL Agents](https://github.com/edbeeching/godot_rl_agents) framework to train agents using the Stable-Baselines3 implementation of OpenAI's [Proximal Policy Optimization](https://openai.com/research/openai-baselines-ppo) algorithm.
+A custom environment made using the [Godot Engine](https://github.com/godotengine/godot) and written in C# used to train reinforcement learning models to drive a car on a top-down virtual track with semi-realistic physics. Utilizes the [Godot RL Agents](https://github.com/edbeeching/godot_rl_agents) framework to train agents using the Stable-Baselines3 implementation of the [Proximal Policy Optimization](https://openai.com/research/openai-baselines-ppo) algorithm.
 
 
 ## Demo - Environment v0.1
@@ -29,9 +29,19 @@ https://github.com/crhexa/rl-racer/assets/56240785/d42c547b-51e6-4a73-bfd1-3ce84
 [Full Demo Video](https://youtu.be/zaZSQkXxg2c)
 
 
-## Installation
-
-Work In Progress
+## Installation (Windows Only)
+Inside of a Python virtual environment, install the Godot RL Agents package:
+```
+pip install godot-rl
+```
+Download the latest release and run the following command to begin training after activating the virtual environment:
+```
+python "sb3.py" --env_path=rl-racer.exe --save_model_path=models\model --n_parallel=4 --speedup=16 --save_checkpoint_frequency=50_000
+```
+Or start running inference on the pre-trained model:
+```
+python "sb3.py" --env_path=rl-racer.exe --resume_model_path=models\model-3 --viz --inference
+```
 
 
 ## Changelog
@@ -49,4 +59,5 @@ Work In Progress
 - Time-tracking and checkpoints
 - Human controlled vs. Agent(s) controlled
 - Improved collision avoidance
+- Linux and maybe macOS binaries
 
