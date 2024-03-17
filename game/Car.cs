@@ -11,8 +11,7 @@ public partial class Car : CharacterBody2D
 	private Label debug;
 	private Track env;
 	private TrackCurve track;
-	private RayCast2D[] rays;
-	private float[] rayLengths;
+	private Proximity proximity;
 	public Controller controller;
 	
 	// Editor variables
@@ -54,15 +53,9 @@ public partial class Car : CharacterBody2D
 	public override void _Ready()
 	{
 		wheels = GetNode<Wheels>("Wheels");
+		proximity = GetNode<Proximity>("Proximity");
 		controller = GetNode<Controller>("Controller");
 		debug = hasFocus ? GetNode<Label>("Canvas/DebugText") : null;
-
-		rays = new RayCast2D[7];
-		rayLengths = new float[7];
-		for (int i = 0; i < 7; i++) {
-			rays[i] = GetNode<RayCast2D>($"RayCast{i+1}");
-			rayLengths[i] = rays[i].TargetPosition.Length();
-		}
 
 		heading = Vector2.Up.Rotated(Rotation);
 		features = new float[M];
@@ -247,11 +240,10 @@ public partial class Car : CharacterBody2D
 		features[8] = direct.X; 
 		features[9] = direct.Y;
 
-		for (int i = 0; i < 7; i++) {
-			bool colliding = rays[i].IsColliding();
-			features[i+10] = colliding
-				? rays[i].GetCollisionPoint().DistanceTo(rays[i].GlobalTransform.Origin) / rayLengths[i] 
-				: 1f;
+		// Proximity detection
+		proximity.SetProximityFeatures(Position, Rotation);
+		for (int i = 0; i < Proximity.maxObj; i++) {
+			features[10+i] = proximity.features[i];
 		}
 	}
 
@@ -273,6 +265,6 @@ public partial class Car : CharacterBody2D
 
 	// Feature reporting
 	public void SetDebugText() {
-		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n dirc_X: {features[8]:f2}\n dirc_Y: {features[9]:f2}\n\n rayc_1: {features[10]:f2}\n rayc_2: {features[11]:f2}\n rayc_3: {features[12]:f2}\n rayc_4: {features[13]:f2}\n rayc_5: {features[14]:f2}\n rayc_6: {features[15]:f2}\n rayc_7: {features[16]:f2}\n\n Reward: {totalReward}";
+		debug.Text = $"\n velo_X: {features[0]:f2}\n velo_Y: {features[1]:f2}\n head_X: {features[2]:f2}\n head_Y: {features[3]:f2}\n whlAng: {features[4]:f2}\n slipFr: {features[5]:f2}\n trkSpd: {features[6]:f2}\n trkDst: {features[7]:f2}\n dirc_X: {features[8]:f2}\n dirc_Y: {features[9]:f2}\n\n prox_0: {features[10]:f2}\n prox_1: {features[11]:f2}\n prox_2: {features[12]:f2}\n prox_3: {features[13]:f2}\n prox_4: {features[14]:f2}\n prox_5: {features[15]:f2}\n prox_6: {features[16]:f2}\n prox_7: {features[17]:f2}\n\n Reward: {totalReward}";
 	}
 }
